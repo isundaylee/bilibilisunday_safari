@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Global Page</title>
+
+		<script type="text/javascript">
+
+			safari.application.addEventListener("command", handle_command, false); 
+
+			function handle_command(event) {
+				if (event.command === 'download') {
+					var reg = new RegExp('bilibili.tv/video/av[0-9]*')
+					var url = event.userInfo
+
+					if (!reg.test(url)) {
+						alert('You don\'t seem to be on a Bilibili video page... ')
+						return
+					}
+
+					var tab_url = 'http://b.ljh.me/?l=' + (safari.extension.settings.bsid || '')
+					var tabs = safari.application.activeBrowserWindow.tabs
+					var tab; 
+
+					for (var i=0; i<tabs.length; i++) {
+						if (new RegExp(tab_url).test(tabs[i].url)) {
+							tab = tabs[i]
+							break; 
+						}
+					}
+
+					if (!tab)
+						tab = safari.application.activeBrowserWindow.openTab()
+
+					tab.url = tab_url + '&a=' + url
+					tab.activate()
+				}
+			}
+
+		</script>
+	</head>
+	<body>
+	</body>
+</html>
